@@ -1,0 +1,17 @@
+{
+	"name": "lambda-node-template",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"start": "NODE_ENV=development node index.js"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"data-s3": "^1.2.3",
+		"dotenv": "^16.0.1"
+	},
+	"type": "module"
+}

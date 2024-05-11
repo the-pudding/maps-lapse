@@ -2,3 +2,5 @@
 .env
 *.zip
 node_modules
+images_raw
+images_resized

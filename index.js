@@ -8,19 +8,13 @@ import mbxStyles from '@mapbox/mapbox-sdk/services/styles.js'
 import mbxTilesets from '@mapbox/mapbox-sdk/services/tilesets.js'
 import mbxStatic from '@mapbox/mapbox-sdk/services/static.js'
 
-
-
-
-
-
 const dev = process.env.NODE_ENV == "development";
 // const bucket = "pudding.cool";
 // const region = "us-east-1";
 // const path = "path/to/folder";
 
 const init = async () => {
-
-
+	
 	const baseClient = mbxClient({ accessToken: 'pk.eyJ1IjoiZG9jazQyNDIiLCJhIjoiY2xqc2g3N2o5MHAyMDNjdGhzM2V2cmR3NiJ9.3x1ManoY4deDkAGBuUMnSw' });
 	const stylesService = mbxStyles(baseClient);
 	const tilesetsService = mbxTilesets(baseClient);

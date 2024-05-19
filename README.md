@@ -1,3 +1,7 @@
+to do:
+
+why isn't the clean file working on all jsons?
+
 # lambda node template
 
 ## setup

@@ -4,7 +4,6 @@ let obj;
 
 function getFile(geo){
     return new Promise((resolve, reject) => {
-        console.log("hello")
         fs.readFile(`open_maps_json/${geo}.json`, 'utf8', function (err, data) {
             if (err) throw err;
             obj = JSON.parse(data);
@@ -31,6 +30,8 @@ export default async function convert(geo){
     for (let node of nodes){
         nodeLookup[node.id] = node;
     }
+
+    console.log(geo,ways.length)
     
     for (let way of ways){
 

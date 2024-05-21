@@ -55,5 +55,9 @@ function getExisting(geo){
 
 export default async function getImages(geo){
     await getFile(geo);
+    obj.features.forEach(d => {
+        d.properties.geo = geo;
+    })
+
     return obj.features;
 }

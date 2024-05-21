@@ -1,6 +1,8 @@
 to do:
+ - convert sprites to basis
+ - get color of court
+ - figure out mipmap removal (saves a MB)
 
-why isn't the clean file working on all jsons?
 
 # lambda node template
 

@@ -12,9 +12,11 @@
 	"dependencies": {
 		"@mapbox/mapbox-sdk": "^0.15.3",
 		"@turf/turf": "^6.5.0",
+		"aws-sdk": "^2.1624.0",
 		"d3": "^7.8.5",
 		"data-s3": "^1.2.3",
 		"dotenv": "^16.0.1",
+		"json-2-csv": "^5.5.1",
 		"node-fetch": "^3.3.0",
 		"overpass-frontend": "^3.2.0",
 		"request": "^2.88.2",

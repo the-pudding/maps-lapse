@@ -13,25 +13,37 @@ function getSrc(geo){
     });
 }
 
-export default async function sprite(geo){
-    let src = await getSrc(geo);
-    // let src = ['google_way_51968234.jpeg']
-    Spritesmith.run({src: src}, function handleResult (err, result) {
+export default async function sprite(courts,chunk){
+    return new Promise((resolve, reject) => {
+        console.log(chunk)
+        // if(chunk == 8){
+    // let path = `../../../Volumes/My Passport/small/${geo}`
+        let src = courts.map(d => {
+            return `../../../Volumes/My Passport/small/${d.properties.geo}/google_way_${d.properties.id}.png`
+        })//.slice(0,3510)
 
-        let ids = Object.keys(result.coordinates);
-        let coords = result.coordinates;
-        let forSave = [];
-        for (let id of ids){
-            let idClean = id.split("way_")[1].replace(".jpeg","");
-            let row = {id:idClean, coords: result.coordinates[id]};
-            forSave.push(row);
-        }
-        fs.writeFile(`sprite_data/${geo}.json`, JSON.stringify(forSave), 'utf8', function(err){
-            if (err) throw err
-            console.log('File saved.')
-        })
+        console.log(src.slice(-1))
 
-        fs.writeFileSync(`sprite_images/${geo}.jpg`, result.image);
-    });
+        Spritesmith.run({src: src}, function handleResult (err, result) {
+            let ids = Object.keys(result.coordinates);
+            let coords = result.coordinates;
+            let forSave = [];
+            for (let id of ids){
+                let idClean = id.split("way_")[1].replace(".png","");
+                let row = {id:idClean, coords: result.coordinates[id]};
+                forSave.push(row);
+            }
+            fs.writeFile(`sprite_data/${chunk}.json`, JSON.stringify(forSave), 'utf8', function(err){
+                if (err) throw err
+                console.log('File saved.')
+                resolve();
+            })
+
+            fs.writeFileSync(`../../../Volumes/My Passport/sprites/${chunk}.jpg`, result.image);
+        });
+        // } else {
+        //     resolve()
+        // }
+    })
 
 }

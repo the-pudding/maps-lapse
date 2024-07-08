@@ -16,7 +16,7 @@ function getFile(geo){
 
 async function getImage(id,center,geo){
     return new Promise(async (resolve, reject) => {
-        console.log("grabbing",id)
+        // console.log("grabbing",id)
         let key = "AIzaSyAcqwF9XAp9Jj4lWobw_86Qk3tTXwylchs";
         key = "AIzaSyBZwP7LnKmyNlJezialp_o-BlepoSzrA5k"
         key = "AIzaSyBc2OHaL9HYNxKJwepodR154y7kiA4UJto"
@@ -33,7 +33,7 @@ async function getImage(id,center,geo){
         }
 
         fs.createWriteStream(path).write(buffer);
-        console.log("written",geo)
+        // console.log("written",geo)
         resolve();
     })
 }
@@ -43,7 +43,7 @@ function getExisting(geo){
 
         if (!fs.existsSync(`../../../Volumes/My Passport/raw_images/${geo}`)){
             fs.mkdirSync(`../../../Volumes/My Passport/raw_images/${geo}`);
-            console.log("made new path")
+            // console.log("made new path")
         }
 
         fs.readdir(`../../../Volumes/My Passport/raw_images/${geo}`, (err, files) => {

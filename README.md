@@ -1,8 +1,8 @@
 to do:
- - convert sprites to basis
  - get color of court
- - figure out mipmap removal (saves a MB)
-
+ - put higher res courts in larger spritesheet (128), smaller courts in 64, load big courts first
+ - geocode all courts to get city/state.
+ - use unidecode to convert weird characters
 
 # lambda node template
 

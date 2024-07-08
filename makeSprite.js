@@ -15,14 +15,14 @@ function getSrc(geo){
 
 export default async function sprite(courts,chunk){
     return new Promise((resolve, reject) => {
-        console.log(chunk)
+        console.log("sprite chunk",chunk)
         // if(chunk == 8){
     // let path = `../../../Volumes/My Passport/small/${geo}`
         let src = courts.map(d => {
             return `../../../Volumes/My Passport/small/${d.properties.geo}/google_way_${d.properties.id}.png`
         })//.slice(0,3510)
 
-        console.log(src.slice(-1))
+        // console.log(src.slice(-1))
 
         Spritesmith.run({src: src}, function handleResult (err, result) {
             let ids = Object.keys(result.coordinates);
@@ -35,7 +35,7 @@ export default async function sprite(courts,chunk){
             }
             fs.writeFile(`sprite_data/${chunk}.json`, JSON.stringify(forSave), 'utf8', function(err){
                 if (err) throw err
-                console.log('File saved.')
+                console.log('File saved.',chunk)
                 resolve();
             })
 

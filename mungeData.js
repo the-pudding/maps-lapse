@@ -1,5 +1,5 @@
 import fs from "fs";
-import { index } from "d3";
+import { index, groups } from "d3";
 import converter from 'json-2-csv';
 
 function getFiles(){
@@ -7,6 +7,16 @@ function getFiles(){
         fs.readdir(`sprite_data/`, (err, files) => {
             resolve(files);
         })
+    })
+}
+
+function readAddresses(){
+    return new Promise((resolve, reject) => {
+        fs.readFile(`geocoded_results.json`, 'utf8', function (err, data) {
+            if (err) throw err;
+            let obj = JSON.parse(data);
+            resolve(obj);
+        });
     })
 }
 
@@ -21,7 +31,48 @@ function readFile(file){
 }
 
 export default async function mungeData(courts){
-    // courts
+
+    let addresses = await readAddresses()
+    let locations = [];
+    for (let address of addresses){
+        let loc = null;
+        let geos = Object.keys(address["address"]);
+        if(geos.indexOf("city") > -1){
+            loc = address["address"].city;
+        }
+        else if(geos.indexOf("town") > -1) {
+            loc = address["address"].town;
+        }
+        else if(geos.indexOf("municipality") > -1) {
+            loc = address["address"].municipality;
+        }
+        else if(geos.indexOf("village") > -1) {
+            loc = address["address"].village;
+        }
+        else if(geos.indexOf("hamlet") > -1) {
+            loc = address["address"].hamlet;
+        }
+        else if(geos.indexOf("city_district") > -1) {
+            loc = address["address"].city_district;
+        }
+        else if(geos.indexOf("suburb") > -1) {
+            loc = address["address"].suburb;
+        }
+        else if(geos.indexOf("neighbourhood") > -1) {
+            loc = address["address"].neighbourhood;
+        }
+        else if(geos.indexOf("county") > -1) {
+            loc = address["address"].county;
+        }
+        else {
+            loc = address["address"].road;
+        }
+        locations.push([address.id,loc])
+    }
+    let locLookup = index(locations, d => d[0]);
+    // let locGroups = groups(locations, d => d[1])
+    // console.log(locGroups.map(d => d[1].length).sort((a,b) => b-a))
+
     let files = await getFiles();
     let output = [];
     for (let file of files){{
@@ -32,17 +83,28 @@ export default async function mungeData(courts){
         output.push(obj);
     }}
     output = output.flat(1);
+
+
     let courtsLookup = index(courts, d => +d.id);
-    output.forEach(d => {
-        let center = courtsLookup.get(+d.id).centerPoint.geometry.coordinates;
+
+    output.forEach((d,i) => {
+        
+        let lookup = courtsLookup.get(+d.id);
+        console.log(lookup,d.id)
+        let center = lookup.centerPoint.geometry.coordinates;
+        // let color = courtsLookup.get(+d.id).color;
+        // d.color = color;
         center = center.map(d => {
-            let round = Math.round(d*100)/100;
+            let round = Math.round(d*10000)/10000;
             return round;
         })
+        d.location = locLookup.get(+d.id)[1];
+        // con
         d.center = center.join(",");
         d.x = d.coords.x;
+        d.state = courtsLookup.get(+d.id).properties.geo;
         d.y = d.coords.y;
-        d.chunk = +d.chunk;
+        d.geo = +d.chunk;
         d.id = +d.id;
         delete d.coords;
     })

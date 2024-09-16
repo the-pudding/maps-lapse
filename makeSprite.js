@@ -25,7 +25,10 @@ export default async function sprite(courts,chunk){
         // console.log(src.slice(-1))
 
         Spritesmith.run({src: src}, function handleResult (err, result) {
+
+
             let ids = Object.keys(result.coordinates);
+
             let coords = result.coordinates;
             let forSave = [];
             for (let id of ids){
@@ -33,6 +36,7 @@ export default async function sprite(courts,chunk){
                 let row = {id:idClean, coords: result.coordinates[id]};
                 forSave.push(row);
             }
+
             fs.writeFile(`sprite_data/${chunk}.json`, JSON.stringify(forSave), 'utf8', function(err){
                 if (err) throw err
                 console.log('File saved.',chunk)

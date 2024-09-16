@@ -12,7 +12,7 @@ dotenv.config();
 // const dev = process.env.NODE_ENV == "development";
 const bucket = "pudding.cool";
 const region = "us-east-1";
-const path = "projects/courts/jpg";
+const path = "projects/courts/webp";
 let s3;
 
 const accessKeyId = process.env.S3_ACCESS_KEY_ID;
@@ -20,18 +20,18 @@ const secretAccessKey = process.env.S3_SECRET_ACCESS_KEY;
 
 AWS.config.update({region:'us-east-1'});
 
-function uploadImage(court){
+function uploadImage(court,size,format){
     return new Promise(async(resolve, reject) => {
         // console.log(court.id)
         // let file = `${court.id}.png`
         // let data = fs.readFileSync(`../../../Volumes/My Passport/raw_images/${court.properties.geo}/google_way_${court.id}.png`)
         
-        let file = `${court.id}.jpg`
-        let data = fs.readFileSync(`../../../Volumes/My Passport/tiles/${court.properties.geo}/google_way_${court.id}.jpg`)
+        let file = `${court.id}.${format}`
+        let data = fs.readFileSync(`../../../Volumes/My Passport/tiles_${size}/${court.properties.geo}/google_way_${court.id}.${format}`)
 
         const uploadedImage = await s3.upload({
             Bucket: "pudding.cool",
-            Key: `${path}/${file}`,
+            Key: `${path}/${size}/${file}`,
             Body: data,
         }).promise()
         
@@ -40,8 +40,8 @@ function uploadImage(court){
     })
 }
 
-export default async function uploadToS3(courts){
-
+export default async function uploadToS3(courts,size,format){
+    console.log("hello")
     s3 = new AWS.S3({
         accessKeyId: accessKeyId,
         secretAccessKey: secretAccessKey,
@@ -54,9 +54,11 @@ export default async function uploadToS3(courts){
         return Math.floor(i/50);
     })
 
+    console.log(format)
+
     for (let chunk of chunks){
         await Promise.all(chunk[1].map(async d => {
-            await uploadImage(d);
+            await uploadImage(d,size,format);
         }));
         console.log("promise finished");
         console.log(chunk[0])

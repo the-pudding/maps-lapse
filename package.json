@@ -10,9 +10,11 @@
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
+		"-": "^0.0.1",
 		"@mapbox/mapbox-sdk": "^0.15.3",
 		"@turf/turf": "^6.5.0",
 		"aws-sdk": "^2.1624.0",
+		"colorthief": "^2.4.0",
 		"d3": "^7.8.5",
 		"data-s3": "^1.2.3",
 		"dotenv": "^16.0.1",
@@ -22,8 +24,10 @@
 		"nominatim-client": "^3.2.1",
 		"overpass-frontend": "^3.2.0",
 		"request": "^2.88.2",
+		"save": "^2.9.0",
 		"sharp": "^0.33.4",
-		"spritesmith": "^3.4.1"
+		"spritesmith": "^3.4.1",
+		"unidecode": "^1.1.0"
 	},
 	"type": "module"
 }

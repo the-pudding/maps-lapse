@@ -1,12 +1,31 @@
 import fs from "fs";
 import { index, groups } from "d3";
 import converter from 'json-2-csv';
+import unidecode from "unidecode";
 
 function getFiles(){
     return new Promise((resolve, reject) => {
         fs.readdir(`sprite_data/`, (err, files) => {
             resolve(files);
         })
+    })
+}
+
+function getColors(){
+    return new Promise((resolve, reject) => {
+        fs.readdir(`color/`, (err, files) => {
+            resolve(files);
+        })
+    })
+}
+
+function readColor(file){
+    return new Promise((resolve, reject) => {
+        fs.readFile(`color/${file}`, 'utf8', function (err, data) {
+            if (err) throw err;
+            let obj = JSON.parse(data);
+            resolve(obj);
+        });
     })
 }
 
@@ -67,6 +86,9 @@ export default async function mungeData(courts){
         else {
             loc = address["address"].road;
         }
+        
+        loc = unidecode(loc);
+        
         locations.push([address.id,loc])
     }
     let locLookup = index(locations, d => d[0]);
@@ -85,20 +107,38 @@ export default async function mungeData(courts){
     output = output.flat(1);
 
 
+    let colorFiles = await getColors();
+
+
+    let colorOutput = [];
+    for (let file of colorFiles){{
+        let obj = await readColor(file);
+
+        console.log(obj)
+        obj.forEach(d => {
+            d.chunk = file.replace(".json","");
+        })
+        colorOutput.push(obj);
+    }}
+    colorOutput = colorOutput.flat(1)
+
+    let courtsColorLookup = index(colorOutput, d => +d.id);
+
     let courtsLookup = index(courts, d => +d.id);
 
     output.forEach((d,i) => {
         
         let lookup = courtsLookup.get(+d.id);
-        console.log(lookup,d.id)
+        let colorLookup = courtsColorLookup.get(+d.id).colors;
+
         let center = lookup.centerPoint.geometry.coordinates;
-        // let color = courtsLookup.get(+d.id).color;
-        // d.color = color;
         center = center.map(d => {
             let round = Math.round(d*10000)/10000;
             return round;
         })
         d.location = locLookup.get(+d.id)[1];
+        d.color = colorLookup;
+        
         // con
         d.center = center.join(",");
         d.x = d.coords.x;

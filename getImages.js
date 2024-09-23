@@ -2,7 +2,10 @@ import fs from "fs";
 import * as turf from "@turf/turf";
 import { groups } from "d3";
 import fetch from "node-fetch";
+import * as dotenv from "dotenv"
 let obj;
+
+
 
 function getFile(geo){
     return new Promise((resolve, reject) => {
@@ -17,9 +20,7 @@ function getFile(geo){
 async function getImage(id,center,geo){
     return new Promise(async (resolve, reject) => {
         console.log("grabbing",id)
-        let key = "AIzaSyAcqwF9XAp9Jj4lWobw_86Qk3tTXwylchs";
-        key = "AIzaSyBZwP7LnKmyNlJezialp_o-BlepoSzrA5k"
-        key = "AIzaSyBc2OHaL9HYNxKJwepodR154y7kiA4UJto"
+        let key = process.env.GOOGLE_MAPS_KEY;
         let url = `https://maps.googleapis.com/maps/api/staticmap?center=${center[0][1]},${center[0][0]}&zoom=20&scale=2&size=640x640&maptype=satellite&format=png&key=${key}`;
 		const response = await fetch(url);
         const arrayBuffer = await response.arrayBuffer();

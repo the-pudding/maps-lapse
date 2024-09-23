@@ -25,18 +25,23 @@ async function resizeImage(id,size,geo) {
         })
         .withMetadata(false) // remove metadata
         // .sharpen()
-        .toFormat('webp', {
-            quality: 100, // set quality for jpeg format (0-100)
-            // mozjpeg: true // enable mozjpeg for better compression efficiency
+
+
+        // .toFormat('webp', {
+        //     quality: 100, // set quality for jpeg format (0-100)
+        //     // mozjpeg: true // enable mozjpeg for better compression efficiency
+        //     chromaSubsampling: '4:4:4' // use less chroma subsampling for better color quality
+        // })
+        // .toFile(`../../../Volumes/My Passport/tiles_${size}/${geo}/google_way_${id}.webp`);
+
+
+        .toFormat('jpeg', {
+            quality: 50, // set quality for jpeg format (0-100)
+            mozjpeg: true, // enable mozjpeg for better compression efficiency
             chromaSubsampling: '4:4:4' // use less chroma subsampling for better color quality
         })
+        .toFile(`../../../Volumes/My Passport/tiles/${geo}/google_way_${id}.jpg`);
 
-        // .toFormat('jpeg', {
-        //     quality: 50, // set quality for jpeg format (0-100)
-        //     mozjpeg: true, // enable mozjpeg for better compression efficiency
-        //     chromaSubsampling: '4:4:4' // use less chroma subsampling for better color quality
-        // })     
-        .toFile(`../../../Volumes/My Passport/tiles_${size}/${geo}/google_way_${id}.webp`);
     } catch (error) {
       console.log(error);
     }
@@ -54,17 +59,22 @@ function getExisting(geo,size){
 export default async function makeTinyTiles(geo,size){
     await getFile(geo,size);
 
-    if (!fs.existsSync(`../../../Volumes/My Passport/tiles_${size}/${geo}`)){
-        fs.mkdirSync(`../../../Volumes/My Passport/tiles_${size}/${geo}`);
+    //for jpg
+    if (!fs.existsSync(`../../../Volumes/My Passport/tiles/${geo}`)){
+        fs.mkdirSync(`../../../Volumes/My Passport/tiles/${geo}`);
         console.log("made new path")
     }
+    let existing = [];
 
-    let existing = await getExisting(geo,size);
-    // existing = existing.filter(d => {
-    //     return d.slice(-3) == "jpg";// || d.slice(-4) == "jpeg" || d.slice(-3) == "jpg"
-    // }).map(d => {
-    //     return +d.split("way_")[1].split(".")[0];
-    // });
+    //for webp
+    // if (!fs.existsSync(`../../../Volumes/My Passport/tiles_${size}/${geo}`)){
+    //     fs.mkdirSync(`../../../Volumes/My Passport/tiles_${size}/${geo}`);
+    //     console.log("made new path")
+    // }
+
+    // let existing = await getExisting(geo,size);
+
+    
 
     console.log(existing.length)
 

@@ -7,12 +7,17 @@ import {groups} from "d3";
 
 dotenv.config();
 
+
 // import("dotenv/config");
 
 // const dev = process.env.NODE_ENV == "development";
 const bucket = "pudding.cool";
 const region = "us-east-1";
-const path = "projects/courts/webp";
+
+//
+let path = "projects/courts/webp";
+
+
 let s3;
 
 const accessKeyId = process.env.S3_ACCESS_KEY_ID;
@@ -22,16 +27,30 @@ AWS.config.update({region:'us-east-1'});
 
 function uploadImage(court,size,format){
     return new Promise(async(resolve, reject) => {
-        // console.log(court.id)
-        // let file = `${court.id}.png`
-        // let data = fs.readFileSync(`../../../Volumes/My Passport/raw_images/${court.properties.geo}/google_way_${court.id}.png`)
-        
+
+        path = "projects/courts/webp";
         let file = `${court.id}.${format}`
-        let data = fs.readFileSync(`../../../Volumes/My Passport/tiles_${size}/${court.properties.geo}/google_way_${court.id}.${format}`)
+        let key = `${path}/${size}/${file}`
+
+        if(format == 'jpg'){
+            path = "projects/courts/jpg";
+            key = `${path}/${file}`
+        }
+
+        // https://s3.amazonaws.com/pudding.cool/projects/courts/jpg/1092491013.jpg
+
+        // console.log(court.id)
+
+        let data;
+        if(format == "jpg"){
+            data = fs.readFileSync(`../../../Volumes/My Passport/tiles/${court.properties.geo}/google_way_${court.id}.${format}`);
+        } else {
+            data = fs.readFileSync(`../../../Volumes/My Passport/tiles_${size}/${court.properties.geo}/google_way_${court.id}.${format}`);
+        }
 
         const uploadedImage = await s3.upload({
             Bucket: "pudding.cool",
-            Key: `${path}/${size}/${file}`,
+            Key: key,
             Body: data,
         }).promise()
         
